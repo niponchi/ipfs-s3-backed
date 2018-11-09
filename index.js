@@ -2,7 +2,7 @@ require('dotenv/config')
 
 const Gateway = require('ipfs/src/http')
 const Repo = require('ipfs-repo')
-const S3 = require('aws-sdk').S3
+const { S3 } = require('aws-sdk')
 const S3Store = require('datastore-s3')
 const S3Lock = require('./s3-lock')
 
@@ -38,10 +38,28 @@ const repo = new Repo(bucketpath, {
   lock: s3Lock
 })
 
-const gateway = new Gateway(repo)
+const gateway = new Gateway(
+  repo,
+  {
+    "Addresses": {
+      "Swarm": [
+        "/ip4/0.0.0.0/tcp/4002",
+        "/ip4/0.0.0.0/tcp/4003/ws"
+      ],
+      "API": "/ip4/0.0.0.0/tcp/5002",
+      "Gateway": "/ip4/0.0.0.0/tcp/9090"
+    }
+  }
+)
+
 console.log('Starting the gateway...')
 
 gateway.start(true, (x) => {
+
+  if (x instanceof Error) {
+    return console.error(x.message)
+  }
+
   console.log('Gateway now running')
 
   const node = gateway.node

@@ -8,6 +8,7 @@ services:
     working_dir: /usr/app
     ports:
       - 4002:4002
+      - 4003:4003
       - 5002:5002
       - 9090:9090
     volumes:

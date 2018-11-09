@@ -8,7 +8,7 @@ An example of s3 backed IPFS
 
 ## prerequisite
 
-create an `.env` file
+create an `.env` file, see `.env.sample`
 
 ```env
 AWS_ACCESSKEY=<AWS_ACCESSKEY>
