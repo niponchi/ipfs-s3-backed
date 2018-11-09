@@ -1,0 +1,23 @@
+{
+  "name": "ipfs-s3",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon .",
+    "dev:docker": "npm i && npm run dev"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.351.0",
+    "datastore-s3": "^0.2.0",
+    "dotenv": "^6.1.0",
+    "ipfs": "^0.33.1",
+    "ipfs-repo": "^0.25.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.6"
+  }
+}

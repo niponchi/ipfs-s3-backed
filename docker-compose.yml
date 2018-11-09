@@ -1,0 +1,42 @@
+version: '3.1'
+services:
+  # ipfs:
+  #   image: ipfs/go-ipfs:latest
+  #   # restart: unless-stopped
+  #   ports:
+  #     # - 4001:4001
+  #     - 5001:5001
+  #     - 8080:8080
+  #   volumes:
+  #     - ./.ipfs/ipfs_staging:/export
+  # - ./.ipfs/ipfs_data:/data/ipfs
+
+  ipfsjs-s3:
+    build:
+      context: .
+      dockerfile: ipfs.s3.Dockerfile
+    env_file: .env
+    # restart: unless-stopped
+    ports:
+      - 4001:4002
+    #   - "9086:9086"
+    volumes:
+      - .:/usr/app
+    command: npm run dev:docker
+
+  ipfsjs:
+    build:
+      context: .
+      dockerfile: ipfs.Dockerfile
+    # restart: unless-stopped
+    ports:
+      # - 4001:4001
+      - 5001:5002
+      - 8080:9090
+    volumes:
+      - ./.jsipfs:/app/.jsipfs
+    environment:
+      IPFS_PATH: /app/.jsipfs
+
+
+    # docker run -it -p 4002:4002 -p 4003:4003 -p 5002:5002 -p 9090:9090 ipfs/js-ipfs:latest
