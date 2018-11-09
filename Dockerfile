@@ -1,7 +1,8 @@
-FROM node:9.3-alpine
+FROM node:8-alpine
 RUN apk update && apk add python make g++ git
 
-RUN mkdir -p /usr/app
+RUN mkdir -p /usr/app \
+    && npm i -g nodemon
 
 WORKDIR /usr/app
 VOLUME ["/usr/app"]

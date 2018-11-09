@@ -1,11 +1,12 @@
 {
-  "name": "ipfs-s3",
+  "name": "ipfs-s3-backed",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "dev": "nodemon .",
-    "dev:docker": "npm i && npm run dev"
+    "predev:docker": "npm install",
+    "dev:docker": "npm run dev"
   },
   "keywords": [],
   "author": "",

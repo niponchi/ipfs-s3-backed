@@ -1,6 +1,6 @@
 require('dotenv/config')
 
-const IPFS = require('ipfs')
+const Gateway = require('ipfs/src/http')
 const Repo = require('ipfs-repo')
 const S3 = require('aws-sdk').S3
 const S3Store = require('datastore-s3')
@@ -38,27 +38,14 @@ const repo = new Repo(bucketpath, {
   lock: s3Lock
 })
 
-// Create a new IPFS node with our S3 backed Repo
-let node = new IPFS({
-  repo,
-  config: {
-    Discovery: { MDNS: { Enabled: true }, webRTCStar: { Enabled: true } },
-    Bootstrap: [],
-    "Addresses": {
-      "Swarm": [
-        "/ip4/0.0.0.0/tcp/4002"
-      ],
-      "API": "/ip4/0.0.0.0/tcp/5002",
-      "Gateway": "/ip4/0.0.0.0/tcp/9090"
-    }
-  }
-})
+const gateway = new Gateway(repo)
+console.log('Starting the gateway...')
 
-console.log('Start the node')
+gateway.start(true, (x) => {
+  console.log('Gateway now running')
 
-// Test out the repo by sending and fetching some data
-node.on('ready', () => {
-  console.log('Ready')
+  const node = gateway.node
+
   node.version()
     .then((version) => {
       console.log('Version:', version.version)
@@ -77,27 +64,10 @@ node.on('ready', () => {
     })
     // Print out the files contents to console
     .then((data) => {
-      console.log(`\nFetched file content containing ${data.byteLength} bytes`)
+      console.log(`\nFetched file content '${data.toString()}' containing ${data.byteLength} bytes`)
     })
     // Log out the error, if there is one
     .catch((err) => {
       console.log('File Processing Error:', err)
     })
-  // // After everything is done, shut the node down
-  // // We don't need to worry about catching errors here
-  // .then(() => {
-  //   console.log('\n\nStopping the node')
-  //   return node.stop()
-  // })
-
-  // const cleanup = (cb) => {
-  //   console.log('cleanup')
-  //   node.stop()
-  // }
-  // // listen for graceful termination
-  // process.on('SIGTERM', cleanup)
-  // process.on('SIGINT', cleanup)
-  // process.on('SIGHUP', cleanup)
-  // process.on('SIGUSR2', cleanup)
-
 })
